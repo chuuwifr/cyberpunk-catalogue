@@ -12,6 +12,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+      // Gracefully prevent transient WebSocket / HMR connection warnings in preview iframes
+      window.addEventListener('unhandledrejection', function(e) {
+        var msg = String(e.reason && (e.reason.message || e.reason) || '');
+        if (msg.includes('WebSocket') || msg.includes('@vite/client') || msg.includes('createWebSocketModuleRunnerTransport')) {
+          e.preventDefault();
+        }
+      });
+      window.addEventListener('error', function(e) {
+        var src = String(e.filename || '');
+        var msg = String(e.message || '');
+        if (src.includes('@vite/client') || msg.includes('WebSocket') || msg.includes('createWebSocketModuleRunnerTransport')) {
+          e.preventDefault();
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

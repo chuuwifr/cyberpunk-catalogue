@@ -1,5 +1,8 @@
+process.env.DISABLE_HMR = 'true';
+process.env.VITE_CONFIG_NATIVE_IGNORE_WARNING = 'true';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -288,10 +291,17 @@ app.get('/api/health', (_req, res) => {
 });
 
 async function startServer() {
+  const server = http.createServer(app);
+
   if (!isProd) {
     const { createServer } = await import('vite');
     const vite = await createServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: {
+          server,
+        },
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -303,7 +313,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  server.listen(PORT, '0.0.0.0', () => {
     console.log(`[CYBERPUNK ENGINE] Server running on http://0.0.0.0:${PORT} (mode: ${isProd ? 'production' : 'development'})`);
   });
 }
