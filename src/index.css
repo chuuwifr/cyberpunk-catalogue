@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #06080e;
+    color: #e2e8f0;
+    font-family: 'Share Tech Mono', monospace, ui-monospace;
+    overflow-x: hidden;
+  }
+}
+
+/* Cyberpunk CRT Scanlines Effect */
+.scanlines-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ),
+  linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  opacity: 0.75;
+}
+
+/* Subtle holographic grid backdrop */
+.cyber-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Custom cyber scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06080e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0e3040;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ff;
+}

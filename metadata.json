@@ -1,0 +1,6 @@
+{
+  "name": "NETRUNNER COMPENDIUM - Cyberpunk & Interface Zéro",
+  "description": "Catalogue d'équipement et de matériel pour Cyberpunk RED et Interface Zéro 2.0 avec filtrage par rareté, types, recherche instantanée et mode favoris.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

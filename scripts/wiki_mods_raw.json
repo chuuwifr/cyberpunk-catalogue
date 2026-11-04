@@ -1,0 +1,722 @@
+{
+  "HPO Kanone MAX Mk.77": {
+    "title": "HPO Kanone MAX Mk.77",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/f/f4/W_att_scope_sniper_01.png/revision/latest?cb=20211210003953",
+    "extract": "",
+    "type": "Power Sniper Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Hyakume": {
+    "title": "Hyakume",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/5/52/W_att_scope_short_02.png/revision/latest?cb=20211209205756",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Tsunami",
+    "price": ""
+  },
+  "CS-1 Taipan": {
+    "title": "CS-1 Taipan",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/3/39/W_silencer_02.png/revision/latest?cb=20211203122147",
+    "extract": "",
+    "type": "Silencer",
+    "quality": "{{R",
+    "effects": "&plus;100% Stealth Damage<br>&minus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "XC-10 Strix": {
+    "title": "XC-10 Strix",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/11/W_silencer_01.png/revision/latest?cb=20211203122119",
+    "extract": "",
+    "type": "Silencer",
+    "quality": "{{R",
+    "effects": "&plus;150% Stealth Damage<br>&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "TSX Tocororo": {
+    "title": "TSX Tocororo",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/0/0c/W_silencer_04.png/revision/latest?cb=20211203122159",
+    "extract": "",
+    "type": "Silencer",
+    "quality": "{{R",
+    "effects": "&plus;100% Stealth Damage<br>&minus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "XC-10 Cetus": {
+    "title": "XC-10 Cetus",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/19/W_silencer_03.png/revision/latest?cb=20211203122153",
+    "extract": "",
+    "type": "Silencer",
+    "quality": "{{R",
+    "effects": "&plus;150% Stealth Damage<br>&minus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Add-Vantage": {
+    "title": "Add-Vantage",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/5/5f/W_att_scope_short_03.png/revision/latest?cb=20211209201930",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Budget Arms",
+    "price": ""
+  },
+  "OS-1 GimletEye": {
+    "title": "OS-1 GimletEye",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/3/30/W_att_scope_short_01.png/revision/latest?cb=20211209205751",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Kiroshi",
+    "price": ""
+  },
+  "CQO Kanone MINI Mk.72": {
+    "title": "CQO Kanone MINI Mk.72",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/0/0f/W_att_scope_short_04.png/revision/latest?cb=20211209205623",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Type 2067": {
+    "title": "Type 2067",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/11/W_att_scope_short_05.png/revision/latest?cb=20211209205516",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Kang Tao",
+    "price": ""
+  },
+  "Mk.2x Grandstand": {
+    "title": "Mk.2x Grandstand",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/ea/W_att_scope_long_01.png/revision/latest?cb=20211210105136",
+    "extract": "",
+    "type": "Long Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "E255 Percipient": {
+    "title": "E255 Percipient",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/8/89/W_att_scope_long_02.png/revision/latest?cb=20211210105142",
+    "extract": "",
+    "type": "Long Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Nokota",
+    "price": ""
+  },
+  "ClearVue Mk.8": {
+    "title": "ClearVue Mk.8",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/4/4a/W_att_scope_long_03.png/revision/latest?cb=20211210105147",
+    "extract": "",
+    "type": "Long Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "SO-21 Saika": {
+    "title": "SO-21 Saika",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/2/2d/W_att_scope_long_04.png/revision/latest?cb=20211210105158",
+    "extract": "",
+    "type": "Long Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "E305 Prospecta": {
+    "title": "E305 Prospecta",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/eb/W_att_scope_sniper_02.png/revision/latest?cb=20211210004003",
+    "extract": "",
+    "type": "Tech Sniper Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Nokota",
+    "price": ""
+  },
+  "RC-7 Strigoi": {
+    "title": "RC-7 Strigoi",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/9/95/W_att_power_05.png/revision/latest?cb=20220216173902",
+    "extract": "",
+    "type": "Assault Rifle / SMG Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Rostović",
+    "price": ""
+  },
+  "RC-7 Zaar": {
+    "title": "RC-7 Zaar",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/6/66/W_att_power_06.png/revision/latest?cb=20220216173959",
+    "extract": "",
+    "type": "Assault Rifle / SMG Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Nokota",
+    "price": ""
+  },
+  "RC-7 Varkolak": {
+    "title": "RC-7 Varkolak",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/9/92/W_att_power_07.png/revision/latest?cb=20220216174036",
+    "extract": "",
+    "type": "Assault Rifle / SMG Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "RC-7 Aswang": {
+    "title": "RC-7 Aswang",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/9/90/W_att_power_09.png/revision/latest?cb=20220216174104",
+    "extract": "",
+    "type": "Assault Rifle / SMG Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "RC-7 Ifrit": {
+    "title": "RC-7 Ifrit",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/b/b1/W_att_power_10.png/revision/latest?cb=20220216174125",
+    "extract": "",
+    "type": "Assault Rifle / SMG Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Techtronika",
+    "price": ""
+  },
+  "Jue": {
+    "title": "Jue",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/c/ce/W_att_scope_long_05.png/revision/latest?cb=20220216183031",
+    "extract": "",
+    "type": "Long Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Kang Tao",
+    "price": ""
+  },
+  "Handyman": {
+    "title": "Handyman",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/e9/W_att_scope_short_06.png/revision/latest?cb=20220216184012",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "SoftSys",
+    "price": ""
+  },
+  "Kanetsugu": {
+    "title": "Kanetsugu",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/19/W_att_scope_short_07.png/revision/latest?cb=20220216184030",
+    "extract": "",
+    "type": "Short Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "Gaki": {
+    "title": "Gaki",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/6/65/W_att_scope_sniper_03.png/revision/latest?cb=20220216183543",
+    "extract": "",
+    "type": "Tech Sniper Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Tsunami",
+    "price": ""
+  },
+  "Kairo SA-1": {
+    "title": "Kairo SA-1",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/c/c9/W_att_scope_long_06.png/revision/latest?cb=20231001095412",
+    "extract": "",
+    "type": "Long Scope",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Pax": {
+    "title": "Pax",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/0/02/GenericMod1.png/revision/latest?cb=20230923083705",
+    "extract": "",
+    "type": "Weapon Mod",
+    "quality": "{{R",
+    "effects": "Makes the weapon non-lethal.",
+    "manufacturer": "",
+    "price": ""
+  },
+  "RC-7 Yokai": {
+    "title": "RC-7 Yokai",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/8/89/W_att_power_11.png/revision/latest?cb=20220216174145",
+    "extract": "",
+    "type": "Handgun Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "RC-7 Kutrub": {
+    "title": "RC-7 Kutrub",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/e2/W_att_power_12.png/revision/latest?cb=20220216174312",
+    "extract": "",
+    "type": "Handgun Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Tsunami",
+    "price": ""
+  },
+  "RC-7 Dybbuk": {
+    "title": "RC-7 Dybbuk",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/ea/W_att_power_13.png/revision/latest?cb=20220216174525",
+    "extract": "",
+    "type": "Handgun Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Malorian Arms",
+    "price": ""
+  },
+  "RC-7 Babaroga": {
+    "title": "RC-7 Babaroga",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/b/be/W_att_power_14.png/revision/latest?cb=20220216174602",
+    "extract": "",
+    "type": "Handgun Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "RC-7 Liger": {
+    "title": "RC-7 Liger",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/8/86/W_att_power_15.png/revision/latest?cb=20220216174623",
+    "extract": "",
+    "type": "Handgun Muzzle Brake",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Big Mag": {
+    "title": "Big Mag",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/9/9e/ARSMGLMGMod1.png/revision/latest?cb=20230923071440",
+    "extract": "",
+    "type": "AR / SMG / LMG Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Budget Arms",
+    "price": ""
+  },
+  "Ready Steady": {
+    "title": "Ready Steady",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/2/29/ARSMGLMGMod2.png/revision/latest?cb=20231005084944",
+    "extract": "",
+    "type": "AR / SMG / LMG Mod",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Tsunami",
+    "price": ""
+  },
+  "Focus Fire": {
+    "title": "Focus Fire",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/d/d2/ARSMGLMGMod3.png/revision/latest?cb=20230923071428",
+    "extract": "",
+    "type": "AR / SMG / LMG Mod",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "Darra Polytechnic",
+    "price": ""
+  },
+  "Pinpoint": {
+    "title": "Pinpoint",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/f/f1/HGMod1.png/revision/latest?cb=20230923082807",
+    "extract": "",
+    "type": "Pistol / Revolver Mod",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Zenith": {
+    "title": "Zenith",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/8/86/HGMod2.png/revision/latest?cb=20230923071650",
+    "extract": "",
+    "type": "Pistol / Revolver Mod",
+    "quality": "{{R",
+    "effects": "For 5 sec. after drawing your weapon, gain:<br>&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Parallax": {
+    "title": "Parallax",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/c/c4/HGMod3.png/revision/latest?cb=20230923071622",
+    "extract": "",
+    "type": "Pistol / Revolver Mod",
+    "quality": "{{R",
+    "effects": "When aiming:<br>&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Airstrike": {
+    "title": "Airstrike",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/3/3e/MeleeMod1.png/revision/latest?cb=20230923071545",
+    "extract": "",
+    "type": "Melee Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Cyclone": {
+    "title": "Cyclone",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/e1/MeleeMod2.png/revision/latest?cb=20230923071605",
+    "extract": "",
+    "type": "Melee Weapon Mod",
+    "quality": "{{R",
+    "effects": "Performing a Sprint Attack allows you to perform an unlimited number of combo attacks for {{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Bleedout": {
+    "title": "Bleedout",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/4/45/BladeMod2.png/revision/latest?cb=20230923071326",
+    "extract": "",
+    "type": "Blade Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Budget Arms",
+    "price": ""
+  },
+  "Haemocide": {
+    "title": "Haemocide",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/3/3e/BladeMod1.png/revision/latest?cb=20230923071250",
+    "extract": "",
+    "type": "Blade Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Darra Polytechnic",
+    "price": ""
+  },
+  "Slice 'Em Up": {
+    "title": "Slice 'Em Up",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/b/bd/BladeMod3.png/revision/latest?cb=20230923071345",
+    "extract": "",
+    "type": "Blade Mod",
+    "quality": "{{R",
+    "effects": "After neutralizing an [[Cyberpunk 2077 Enemies",
+    "manufacturer": "Tsunami",
+    "price": ""
+  },
+  "K.O.": {
+    "title": "K.O.",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/6/60/BluntMod1.png/revision/latest?cb=20230923071507",
+    "extract": "",
+    "type": "Blunt Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Bloodbruiser": {
+    "title": "Bloodbruiser",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/4/43/BluntMod2.png/revision/latest?cb=20230923071457",
+    "extract": "",
+    "type": "Blunt Weapon Mod",
+    "quality": "{{R",
+    "effects": "Makes the weapon lethal and gives a chance to apply [[Bleed]]ing equal to {{R",
+    "manufacturer": "Budget Arms",
+    "price": ""
+  },
+  "Barbarian": {
+    "title": "Barbarian",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/f/ff/BluntMod3.png/revision/latest?cb=20230923071517",
+    "extract": "",
+    "type": "Blunt Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "Firecracker": {
+    "title": "Firecracker",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/8/87/ChimeraPowerMod.png/revision/latest?cb=20231002104631",
+    "extract": "",
+    "type": "Power Weapon Mod",
+    "quality": "{{R",
+    "effects": "Shoots explosive rounds.",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Wallpuncher": {
+    "title": "Wallpuncher",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/f/f5/ChimeraTechMod.png/revision/latest?cb=20231002104815",
+    "extract": "",
+    "type": "Tech Weapon Mod",
+    "quality": "{{R",
+    "effects": "Allows you to charge the weapon to 200% capacity without increasing the charge time.",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Hackatomy": {
+    "title": "Hackatomy",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/19/ChimeraSmartMod.png/revision/latest?cb=20231002104747",
+    "extract": "",
+    "type": "Smart Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;5% chance to apply a [[quickhack]] effect. Effect type depends on the body part hit.",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Severance": {
+    "title": "Severance",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/4/46/ChimeraMeleeMod.png/revision/latest?cb=20230923071534",
+    "extract": "",
+    "type": "Melee Weapon Mod",
+    "quality": "{{R",
+    "effects": "When an [[Cyberpunk 2077 Enemies",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Disjunctor": {
+    "title": "Disjunctor",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/d/d2/ClampdownTechMod.png/revision/latest?cb=20261023194906",
+    "extract": "",
+    "type": "Tech Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;10&percnt; charge speed after a headshot with a fully charged weapon. Duration: 10 sec. Stacks 5 times.<br>&plus;50&percnt; damage with [[Bolt]] shots.",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Better Half": {
+    "title": "Better Half",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/b/bb/RangedMod3.png/revision/latest?cb=20230923071232",
+    "extract": "",
+    "type": "Ranged Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "Shuffler": {
+    "title": "Shuffler",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/13/RangedMod1.png/revision/latest?cb=20230923071208",
+    "extract": "",
+    "type": "Ranged Weapon Mod",
+    "quality": "{{R",
+    "effects": "Drawing the weapon automatically refills its ammo up to {{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Equalizer": {
+    "title": "Equalizer",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/5/59/RangedMod2.png/revision/latest?cb=20230923071221",
+    "extract": "",
+    "type": "Ranged Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Pyro": {
+    "title": "Pyro",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/8/8b/PowerMod1.png/revision/latest?cb=20230923071707",
+    "extract": "",
+    "type": "Power Weapon Mod",
+    "quality": "{{R",
+    "effects": "Converts {{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Swiss Cheese": {
+    "title": "Swiss Cheese",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/2/2a/PowerMod2.png/revision/latest?cb=20231005085832",
+    "extract": "",
+    "type": "Power Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Arasaka",
+    "price": ""
+  },
+  "Critochet": {
+    "title": "Critochet",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/3/31/PowerMod3.png/revision/latest?cb=20230923082612",
+    "extract": "",
+    "type": "Power Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "C-Thru": {
+    "title": "C-Thru",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/1e/TechMod1.png/revision/latest?cb=20230923072137",
+    "extract": "",
+    "type": "Tech Weapon Mod",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Spinetickler": {
+    "title": "Spinetickler",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/6/6a/TechMod2.png/revision/latest?cb=20230923072151",
+    "extract": "",
+    "type": "Tech Weapon Mod",
+    "quality": "{{R",
+    "effects": "{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Supercharger": {
+    "title": "Supercharger",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/c/c8/TechMod3.png/revision/latest?cb=20230923072251",
+    "extract": "",
+    "type": "Tech Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Headhopper": {
+    "title": "Headhopper",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/9/9a/SmartMod1.png/revision/latest?cb=20231005085912",
+    "extract": "",
+    "type": "Smart Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Kang Tao",
+    "price": ""
+  },
+  "Gambiteer": {
+    "title": "Gambiteer",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/d/dc/SmartMod2.png/revision/latest?cb=20230923071739",
+    "extract": "",
+    "type": "Smart Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Budget Arms",
+    "price": ""
+  },
+  "Panorama": {
+    "title": "Panorama",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/5/5f/SmartMod3.png/revision/latest?cb=20230923071919",
+    "extract": "",
+    "type": "Smart Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "Militech",
+    "price": ""
+  },
+  "Fleetshot": {
+    "title": "Fleetshot",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/f/f4/PRSRMod3.png/revision/latest?cb=20230923072110",
+    "extract": "",
+    "type": "Sniper / Precision Rifle Mod",
+    "quality": "{{R",
+    "effects": "&minus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Stabilizer": {
+    "title": "Stabilizer",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/7/78/PRSRMod1.png/revision/latest?cb=20231005090013",
+    "extract": "",
+    "type": "Sniper / Precision Rifle Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Headtoll": {
+    "title": "Headtoll",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/e/ed/PRSRMod2.png/revision/latest?cb=20230923082703",
+    "extract": "",
+    "type": "Sniper / Precision Rifle Mod",
+    "quality": "{{R",
+    "effects": "Gives bonuses for headshot kills.<br>Bonus and Streak Duration: {{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Condenser": {
+    "title": "Condenser",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/0/06/ShotgunMod3.png/revision/latest?cb=20230923072045",
+    "extract": "",
+    "type": "Shotgun Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Kneel!": {
+    "title": "Kneel!",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/2/24/ShotgunMod2.png/revision/latest?cb=20231005085958",
+    "extract": "",
+    "type": "Shotgun Mod",
+    "quality": "{{R",
+    "effects": "&plus;25% chance to dismember and instantly kill when shooting an [[Cyberpunk 2077 Enemies",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Vivisector": {
+    "title": "Vivisector",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/f/f1/ShotgunMod1.png/revision/latest?cb=20230923082641",
+    "extract": "",
+    "type": "Shotgun Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Silencio": {
+    "title": "Silencio",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/17/MeleeMod3.png/revision/latest?cb=20230923071555",
+    "extract": "",
+    "type": "Melee Weapon Mod",
+    "quality": "{{R",
+    "effects": "When crouched and undetected:<br>&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Zero-G": {
+    "title": "Zero-G",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/7/7a/ThrowMod2.png/revision/latest?cb=20231005085516",
+    "extract": "",
+    "type": "Throwable Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Javelin": {
+    "title": "Javelin",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/1/14/ThrowMod3.png/revision/latest?cb=20231005085442",
+    "extract": "",
+    "type": "Throwable Weapon Mod",
+    "quality": "{{R",
+    "effects": "&plus;{{R",
+    "manufacturer": "",
+    "price": ""
+  },
+  "Boomerang": {
+    "title": "Boomerang",
+    "thumb": "https://static.wikia.nocookie.net/cyberpunk/images/2/24/ThrowMod1.png/revision/latest?cb=20231005085355",
+    "extract": "",
+    "type": "Throwable Weapon Mod",
+    "quality": "{{R",
+    "effects": "Neutralizing an [[Cyberpunk 2077 Enemies",
+    "manufacturer": "",
+    "price": ""
+  }
+}
