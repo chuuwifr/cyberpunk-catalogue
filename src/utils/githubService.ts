@@ -132,10 +132,22 @@ async function fetchGitHubApi(endpoint: string, token?: string, options: Request
   try {
     const res = await fetch(url, { ...options, headers });
     return res;
-  } catch (err) {
-    // Fallback to local server proxy
-    const proxyUrl = `/api/github/proxy?url=${encodeURIComponent(url)}`;
-    return await fetch(proxyUrl, { ...options, headers });
+  } catch (err: any) {
+    // Only attempt local server proxy if not on a pure static host like github.io
+    const isStaticHost = typeof window !== 'undefined' && (
+      window.location.hostname.endsWith('github.io') ||
+      window.location.hostname.endsWith('pages.dev') ||
+      window.location.protocol === 'file:'
+    );
+    if (!isStaticHost) {
+      try {
+        const proxyUrl = `/api/github/proxy?url=${encodeURIComponent(url)}`;
+        return await fetch(proxyUrl, { ...options, headers });
+      } catch {
+        // Fall through
+      }
+    }
+    throw new Error(`Erreur réseau GitHub : ${err?.message || 'Connexion impossible'}`);
   }
 }
 

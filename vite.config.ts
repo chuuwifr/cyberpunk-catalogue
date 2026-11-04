@@ -46,6 +46,7 @@ function imageProxyPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [react(), tailwindcss(), imageProxyPlugin()],
     resolve: {
       alias: {

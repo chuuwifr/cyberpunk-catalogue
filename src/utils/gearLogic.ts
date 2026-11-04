@@ -539,7 +539,8 @@ export function getSwadeConversionSummary(item: EquipmentItem): {
 
 /**
  * Safely resolves equipment image URLs, routing Fandom/Wikia images through
- * a same-origin proxy to eliminate CORS/CORP header blocks while preserving base64/custom URLs.
+ * a same-origin proxy or CDN fallback on static hosts (GitHub Pages) to eliminate
+ * CORS/CORP header blocks while preserving base64/custom URLs.
  */
 export function getSafeImageUrl(url: string | undefined): string {
   if (!url) return '';
@@ -547,6 +548,15 @@ export function getSafeImageUrl(url: string | undefined): string {
     return url;
   }
   if (url.includes('wikia.nocookie.net') || url.includes('fandom.com')) {
+    // If running in a static hosting environment like GitHub Pages where /api/proxy-image is not available
+    const isStaticHost = typeof window !== 'undefined' && (
+      window.location.hostname.endsWith('github.io') ||
+      window.location.hostname.endsWith('pages.dev') ||
+      window.location.protocol === 'file:'
+    );
+    if (isStaticHost) {
+      return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+    }
     return `/api/proxy-image?url=${encodeURIComponent(url)}`;
   }
   return url;

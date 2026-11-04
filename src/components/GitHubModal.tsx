@@ -745,11 +745,15 @@ export const GitHubModal: React.FC<GitHubModalProps> = ({
                         Authentification via la fenêtre de connexion officielle GitHub. Ouvre la page d’autorisation GitHub directement dans un pop-up sécurisé.
                       </p>
 
-                      {oauthConfigured === false && (
+                      {typeof window !== 'undefined' && window.location.hostname.endsWith('github.io') ? (
+                        <div className="mt-3 p-2 bg-cyan-950/40 border border-cyan-500/50 rounded text-[11px] text-cyan-300">
+                          🌐 <strong>Environnement GitHub Pages actif</strong> : Sur GitHub Pages (hébergement statique), utilisez l’<strong>Option 2 (Token PAT)</strong> ci-contre. Elle fonctionne à 100% directement depuis votre navigateur pour sauvegarder et charger vos Gists.
+                        </div>
+                      ) : oauthConfigured === false ? (
                         <div className="mt-3 p-2 bg-zinc-900 border border-zinc-700 rounded text-[11px] text-zinc-400">
                           ℹ️ Si vous n’avez pas configuré les variables d’environnement OAuth (<code className="text-cyan-300">GITHUB_CLIENT_ID</code>), utilisez simplement l’Option 2 (Token Personnel) à droite : elle fonctionne instantanément sans aucune configuration serveur !
                         </div>
-                      )}
+                      ) : null}
                     </div>
 
                     <button
