@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, Plugin} from 'vite';
+import {isProxyableImageUrl} from './src/utils/imageHosts.ts';
 
 function imageProxyPlugin(): Plugin {
   return {
@@ -15,6 +16,10 @@ function imageProxyPlugin(): Plugin {
             if (!targetUrl) {
               res.statusCode = 400;
               return res.end('Missing url parameter');
+            }
+            if (!isProxyableImageUrl(targetUrl)) {
+              res.statusCode = 400;
+              return res.end('URL not allowed');
             }
             const upstream = await fetch(targetUrl, {
               headers: {

@@ -5,6 +5,7 @@ import express, { Request, Response } from 'express';
 import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { isProxyableImageUrl, escapeHtml, jsonForInlineScript } from './src/utils/imageHosts.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +21,10 @@ app.get('/api/proxy-image', async (req: Request, res: Response) => {
   const targetUrl = req.query.url as string;
   if (!targetUrl) {
     return res.status(400).send('Paramètre url manquant');
+  }
+  // Uniquement les images du wiki Cyberpunk / Fandom : le proxy n'est pas un relais ouvert
+  if (!isProxyableImageUrl(targetUrl)) {
+    return res.status(400).type('text/plain').send('URL non autorisée');
   }
 
   try {
@@ -43,7 +48,7 @@ app.get('/api/proxy-image', async (req: Request, res: Response) => {
     const arrayBuffer = await upstream.arrayBuffer();
     return res.end(Buffer.from(arrayBuffer));
   } catch (err: any) {
-    return res.status(500).send(err?.message || 'Erreur proxy image');
+    return res.status(500).type('text/plain').send(err?.message || 'Erreur proxy image');
   }
 });
 
@@ -94,7 +99,7 @@ const oauthCallbackHandler = async (req: Request, res: Response) => {
         <body>
           <div class="box">
             <h2 style="margin-top:0;">[CONNEXION ÉCHOUÉE]</h2>
-            <p style="color:#d1d5db;">${errorMsg}</p>
+            <p style="color:#d1d5db;">${escapeHtml(errorMsg)}</p>
             <button onclick="window.close()" style="background:#ff0055;color:#fff;border:none;padding:8px 16px;cursor:pointer;font-family:monospace;margin-top:12px;font-weight:bold;">FERMER</button>
           </div>
         </body>
@@ -210,8 +215,8 @@ const oauthCallbackHandler = async (req: Request, res: Response) => {
               const payload = {
                 type: 'OAUTH_AUTH_SUCCESS',
                 provider: 'github',
-                token: ${JSON.stringify(token)},
-                user: ${JSON.stringify(user)}
+                token: ${jsonForInlineScript(token)},
+                user: ${jsonForInlineScript(user)}
               };
               if (window.opener) {
                 window.opener.postMessage(payload, '*');
@@ -232,7 +237,7 @@ const oauthCallbackHandler = async (req: Request, res: Response) => {
       <html>
         <body style="background:#0a0c10;color:#ff0055;font-family:monospace;padding:30px;">
           <h2>ERREUR OAUTH GITHUB</h2>
-          <pre>${err?.message || 'Erreur inconnue'}</pre>
+          <pre>${escapeHtml(err?.message || 'Erreur inconnue')}</pre>
           <button onclick="window.close()" style="margin-top:20px;padding:8px 16px;background:#ff0055;color:#fff;border:none;cursor:pointer;">Fermer</button>
         </body>
       </html>
