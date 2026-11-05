@@ -17,9 +17,13 @@ import {
   Trash2,
   Eye,
   Sparkles,
-  Sliders
+  Sliders,
+  ShoppingCart,
+  Check,
+  Coins
 } from 'lucide-react';
 import { EquipmentItem, formatCurrency, getSafeImageUrl } from '../utils/gearLogic.ts';
+import { generateHologramBlueprint } from '../utils/hologramSvg.ts';
 import { playCyberFavorite, playCyberClick } from '../utils/audio.ts';
 
 interface EquipmentCardProps {
@@ -32,6 +36,13 @@ interface EquipmentCardProps {
   ruleSystem: 'both' | 'red' | 'iz';
   onEditCustom?: (item: EquipmentItem) => void;
   onDeleteCustom?: (id: string) => void;
+
+  // Virtual Shop Mode Props
+  isShopMode?: boolean;
+  playerWalletEb?: number;
+  playerWalletCredits?: number;
+  ownedQuantity?: number;
+  onBuyItem?: (item: EquipmentItem, currency: 'eb' | 'credits') => void;
 }
 
 export const EquipmentCard: React.FC<EquipmentCardProps> = ({
@@ -44,8 +55,16 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   ruleSystem,
   onEditCustom,
   onDeleteCustom,
+  isShopMode = false,
+  playerWalletEb = 0,
+  playerWalletCredits = 0,
+  ownedQuantity = 0,
+  onBuyItem,
 }) => {
   const [imgError, setImgError] = useState(false);
+
+  const canAffordEb = playerWalletEb >= (item.red.priceEb || 0);
+  const canAffordCredits = playerWalletCredits >= (item.iz.priceCredits || 0);
 
   const getRarityStyles = (rarity: string) => {
     switch (rarity) {
@@ -120,6 +139,11 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
     }
   };
 
+  // Guaranteed image source: if error or missing, procedural holographic SVG is used
+  const imageSource = !imgError && item.imageUrl
+    ? getSafeImageUrl(item.imageUrl)
+    : generateHologramBlueprint(item);
+
   return (
     <article
       className={`group relative flex flex-col bg-[#0b0f19] border ${styles.border} rounded-sm overflow-hidden transition-all duration-200 ${styles.glow} font-mono`}
@@ -143,6 +167,12 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
             {item.isCustom && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-400/80 text-amber-300 font-bold">
                 ★ CRÉÉ
+              </span>
+            )}
+            {isShopMode && ownedQuantity > 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-500 text-emerald-300 font-bold flex items-center gap-1">
+                <Check className="w-3 h-3 text-emerald-400" />
+                POSSÉDÉ (x{ownedQuantity})
               </span>
             )}
           </div>
@@ -175,24 +205,15 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
       </div>
 
       {/* Visual / Image area */}
-      <div className="relative h-40 bg-gradient-to-b from-zinc-950 via-[#0d121d] to-[#0b0f19] overflow-hidden flex items-center justify-center border-b border-zinc-800/80">
-        {!imgError && item.imageUrl ? (
-          <img
-            src={getSafeImageUrl(item.imageUrl)}
-            alt={item.name}
-            referrerPolicy="no-referrer"
-            onError={() => setImgError(true)}
-            className="w-full h-full object-contain p-2.5 opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300 drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)]"
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-zinc-600 gap-2 p-4 text-center">
-            <div className="w-12 h-12 rounded border border-cyan-800/40 bg-cyan-950/30 flex items-center justify-center text-cyan-400/70">
-              {getIcon(item.fallbackIcon)}
-            </div>
-            <span className="text-[10px] tracking-widest uppercase text-zinc-500">SCHÉMA HOLOGRAMME DISPONIBLE</span>
-          </div>
-        )}
+      <div className="relative h-44 bg-gradient-to-b from-zinc-950 via-[#0d121d] to-[#0b0f19] overflow-hidden flex items-center justify-center border-b border-zinc-800/80">
+        <img
+          src={imageSource}
+          alt={item.name}
+          referrerPolicy="no-referrer"
+          onError={() => setImgError(true)}
+          className="w-full h-full object-contain p-2 opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300 drop-shadow-[0_6px_16px_rgba(0,0,0,0.85)]"
+          loading="lazy"
+        />
 
         {/* Tactical watermark tag */}
         <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm px-1.5 py-0.5 rounded border border-cyan-500/30 text-[10px] text-cyan-300 flex items-center gap-1">
@@ -262,46 +283,79 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
                 <span>SWADE // INTERFACE ZÉRO</span>
                 <span className="text-[10px] text-zinc-400">{item.iz.quality}</span>
               </div>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-zinc-300">
-                {item.iz.damage && (
-                  <div>
-                    <span className="text-zinc-500">Dégâts SWADE:</span> <span className="text-amber-300 font-semibold">{item.iz.damage}</span>
-                  </div>
-                )}
-                {item.iz.range && (
-                  <div>
-                    <span className="text-zinc-500">Portée:</span> <span className="text-zinc-200">{item.iz.range}</span>
-                  </div>
-                )}
-                {item.iz.ap !== undefined && (
-                  <div>
-                    <span className="text-zinc-500">PA (Armor Piercing):</span> <span className="text-orange-400 font-semibold">PA {item.iz.ap}</span>
-                  </div>
-                )}
-                {item.iz.armorBonus !== undefined && (
-                  <div>
-                    <span className="text-zinc-500">Armure:</span> <span className="text-emerald-400 font-semibold">+{item.iz.armorBonus}</span>
-                  </div>
-                )}
-                {item.iz.cybertension !== undefined && (
-                  <div className="col-span-2 flex items-center justify-between">
-                    <span className="text-zinc-500">Cybertension:</span>
-                    <span className={`font-semibold ${item.iz.cybertension > 3 ? 'text-red-400' : 'text-cyan-300'}`}>
-                      {item.iz.cybertension} pt{item.iz.cybertension > 1 ? 's' : ''}
-                      {item.iz.cybertension >= 5 && ' (Risque Trauma)'}
+              <div className="space-y-1 text-zinc-300">
+                <div className="flex items-center justify-between">
+                  {item.iz.damage && (
+                    <span><strong className="text-amber-300">Dégâts SWADE:</strong> {item.iz.damage}</span>
+                  )}
+                  {item.iz.range && (
+                    <span><strong className="text-zinc-400">Portée:</strong> {item.iz.range}</span>
+                  )}
+                </div>
+                <div className="flex items-center justify-between text-[10px]">
+                  {item.iz.ap ? <span><strong className="text-zinc-400">PA (Armor Piercing):</strong> PA {item.iz.ap}</span> : null}
+                  {item.iz.cybertension !== undefined && (
+                    <span>
+                      <strong className="text-fuchsia-400">Cybertension:</strong>{' '}
+                      {item.iz.cybertension > 0 ? `${item.iz.cybertension} pts` : '0 pt'}
                     </span>
-                  </div>
-                )}
-                <div className="col-span-2 text-[10px] text-zinc-400 truncate">
-                  <span className="text-zinc-500">Notes:</span> {item.iz.notes}
+                  )}
+                </div>
+                <div className="text-[10px] text-zinc-400 line-clamp-1 italic">
+                  Notes: {item.iz.notes}
                 </div>
               </div>
             </div>
           )}
         </div>
 
+        {/* VIRTUAL SHOP BUY BAR (If Shop Mode is active) */}
+        {isShopMode && onBuyItem && (
+          <div className="mb-2.5 p-2 bg-gradient-to-r from-amber-950/40 via-zinc-950 to-cyan-950/40 border border-amber-500/50 rounded flex flex-col gap-1.5">
+            <div className="flex items-center justify-between text-[10px] font-bold">
+              <span className="text-amber-400 flex items-center gap-1">
+                <ShoppingCart className="w-3.5 h-3.5" /> BOUTIQUE NOIRE
+              </span>
+              <span className="text-zinc-400">Acheter avec :</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                onClick={() => {
+                  playCyberFavorite();
+                  onBuyItem(item, 'eb');
+                }}
+                disabled={!canAffordEb}
+                className={`py-1 px-1.5 rounded text-[11px] font-bold transition-all flex items-center justify-center gap-1 border ${
+                  canAffordEb
+                    ? 'bg-amber-500 text-black border-amber-400 hover:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.25)]'
+                    : 'bg-zinc-900/60 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                }`}
+                title={canAffordEb ? `Acheter pour ${item.red.priceEb} €$` : 'Fonds en Eurodollars insuffisants'}
+              >
+                <span>Acheter {formatCurrency(item.red.priceEb, 'eb')}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  playCyberFavorite();
+                  onBuyItem(item, 'credits');
+                }}
+                disabled={!canAffordCredits}
+                className={`py-1 px-1.5 rounded text-[11px] font-bold transition-all flex items-center justify-center gap-1 border ${
+                  canAffordCredits
+                    ? 'bg-cyan-500 text-black border-cyan-400 hover:bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.25)]'
+                    : 'bg-zinc-900/60 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                }`}
+                title={canAffordCredits ? `Acheter pour ${item.iz.priceCredits} c$` : 'Fonds en Crédits IZ insuffisants'}
+              >
+                <span>Acheter {formatCurrency(item.iz.priceCredits, 'credits')}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Card action buttons */}
-        <div className="pt-2.5 mt-2 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+        <div className="pt-2 mt-auto border-t border-zinc-800/80 flex items-center justify-between gap-2">
           {item.isCustom && onEditCustom && (
             <button
               onClick={() => {

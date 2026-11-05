@@ -21,6 +21,17 @@ import { DiceRollerModal } from './components/DiceRollerModal.tsx';
 import { RulesGuideModal } from './components/RulesGuideModal.tsx';
 import { AddEquipmentModal } from './components/AddEquipmentModal.tsx';
 import { GitHubModal } from './components/GitHubModal.tsx';
+import { ShopControlBar } from './components/ShopControlBar.tsx';
+import { PlayerInventoryModal } from './components/PlayerInventoryModal.tsx';
+import { ProfileManagerModal } from './components/ProfileManagerModal.tsx';
+import { PlayerProfile } from './types/playerProfile.ts';
+import {
+  loadProfiles,
+  getActiveProfile,
+  setActiveProfileId,
+  buyItem,
+  adjustWallet,
+} from './utils/profileService.ts';
 import { toggleAudio, isAudioEnabled, playCyberClick } from './utils/audio.ts';
 import {
   GitHubUser,
@@ -124,6 +135,54 @@ export default function App() {
   const [editingEquipment, setEditingEquipment] = useState<EquipmentItem | null>(null);
   const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
   const [githubUser, setGithubUser] = useState<GitHubUser | null>(() => getSavedGitHubUser());
+
+  // Virtual Shop & Player Profiles
+  const [isShopMode, setIsShopMode] = useState<boolean>(() => {
+    return localStorage.getItem('tech_compendium_shop_mode') === 'true';
+  });
+  const [profiles, setProfiles] = useState<PlayerProfile[]>(() => loadProfiles());
+  const [activeProfile, setActiveProfile] = useState<PlayerProfile>(() => getActiveProfile());
+  const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
+  const [isProfileManagerOpen, setIsProfileManagerOpen] = useState(false);
+  const [isProfileManagerCreating, setIsProfileManagerCreating] = useState(false);
+
+  const handleOpenProfileManager = (startCreate = false) => {
+    setIsProfileManagerCreating(startCreate);
+    setIsProfileManagerOpen(true);
+  };
+
+  useEffect(() => {
+    localStorage.setItem('tech_compendium_shop_mode', String(isShopMode));
+  }, [isShopMode]);
+
+  // Owned item quantities count for active player
+  const ownedQuantitiesMap = useMemo(() => {
+    const map = new Map<string, number>();
+    activeProfile.inventory.forEach((inv) => {
+      map.set(inv.equipmentId, (map.get(inv.equipmentId) || 0) + (inv.quantity || 1));
+    });
+    return map;
+  }, [activeProfile.inventory]);
+
+  const handleBuyItem = (item: EquipmentItem, currency: 'eb' | 'credits') => {
+    const res = buyItem(activeProfile.id, item, currency, 1);
+    if (res.success && res.updatedProfile) {
+      setActiveProfile(res.updatedProfile);
+      setProfiles(loadProfiles());
+      showNotification(res.message);
+    } else {
+      showNotification(res.message);
+    }
+  };
+
+  const handleQuickAddFunds = () => {
+    const updated = adjustWallet(activeProfile.id, 2000, 4000);
+    if (updated) {
+      setActiveProfile(updated);
+      setProfiles(loadProfiles());
+      showNotification('Prime de mission encaissée : +2 000 €$ et +4 000 c$ !');
+    }
+  };
 
   // Notification feedback
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
@@ -446,6 +505,24 @@ export default function App() {
         onRuleSystemChange={setRuleSystem}
         githubUser={githubUser}
         onOpenGitHubModal={() => setIsGitHubModalOpen(true)}
+        activeProfile={activeProfile}
+        onOpenProfileManager={() => handleOpenProfileManager(false)}
+      />
+
+      {/* Virtual Shop & Player Profile Control Bar */}
+      <ShopControlBar
+        isShopMode={isShopMode}
+        onToggleShopMode={() => setIsShopMode((prev) => !prev)}
+        activeProfile={activeProfile}
+        profiles={profiles}
+        onSelectProfile={(id) => {
+          setActiveProfileId(id);
+          setActiveProfile(getActiveProfile());
+        }}
+        onOpenInventory={() => setIsInventoryModalOpen(true)}
+        onOpenProfileManager={() => handleOpenProfileManager(false)}
+        onOpenCreateProfile={() => handleOpenProfileManager(true)}
+        onQuickAddFunds={handleQuickAddFunds}
       />
 
       {/* Database / Backup HUD Bar */}
@@ -669,6 +746,11 @@ export default function App() {
                 ruleSystem={ruleSystem}
                 onEditCustom={handleEditEquipment}
                 onDeleteCustom={handleDeleteEquipment}
+                isShopMode={isShopMode}
+                playerWalletEb={activeProfile.walletEb}
+                playerWalletCredits={activeProfile.walletCredits}
+                ownedQuantity={ownedQuantitiesMap.get(item.id) || 0}
+                onBuyItem={handleBuyItem}
               />
             ))}
           </div>
@@ -749,6 +831,11 @@ export default function App() {
         onEditEquipment={handleEditEquipment}
         onDeleteEquipment={handleDeleteEquipment}
         onDuplicateEquipment={handleDuplicateEquipment}
+        isShopMode={isShopMode}
+        playerWalletEb={activeProfile.walletEb}
+        playerWalletCredits={activeProfile.walletCredits}
+        ownedQuantity={selectedDetailItem ? (ownedQuantitiesMap.get(selectedDetailItem.id) || 0) : 0}
+        onBuyItem={handleBuyItem}
       />
 
       <FavoritesDrawer
@@ -795,6 +882,44 @@ export default function App() {
         onImportItems={handleImportFromGitHub}
         currentUser={githubUser}
         onUserChange={setGithubUser}
+      />
+
+      {/* Player Inventory & Equipment Stash Modal */}
+      <PlayerInventoryModal
+        isOpen={isInventoryModalOpen}
+        onClose={() => setIsInventoryModalOpen(false)}
+        profile={activeProfile}
+        onUpdateProfile={(updated) => {
+          setActiveProfile(updated);
+          setProfiles(loadProfiles());
+        }}
+        onOpenDiceRoller={(item) => {
+          setDicePresetItem(item);
+          setIsDiceRollerOpen(true);
+        }}
+        onSelectItemDetails={(item) => {
+          setSelectedDetailItem(item);
+        }}
+      />
+
+      {/* Multi-Profile Management Modal */}
+      <ProfileManagerModal
+        isOpen={isProfileManagerOpen}
+        onClose={() => {
+          setIsProfileManagerOpen(false);
+          setIsProfileManagerCreating(false);
+        }}
+        profiles={profiles}
+        activeProfileId={activeProfile.id}
+        startInCreateMode={isProfileManagerCreating}
+        onSelectProfile={(id) => {
+          setActiveProfileId(id);
+          setActiveProfile(getActiveProfile());
+        }}
+        onRefreshProfiles={() => {
+          setProfiles(loadProfiles());
+          setActiveProfile(getActiveProfile());
+        }}
       />
     </div>
   );

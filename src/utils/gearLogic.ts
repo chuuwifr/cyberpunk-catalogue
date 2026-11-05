@@ -548,16 +548,17 @@ export function getSafeImageUrl(url: string | undefined): string {
     return url;
   }
   if (url.includes('wikia.nocookie.net') || url.includes('fandom.com')) {
-    // If running in a static hosting environment like GitHub Pages where /api/proxy-image is not available
+    // If running on server or dev preview with /api/proxy-image available
     const isStaticHost = typeof window !== 'undefined' && (
       window.location.hostname.endsWith('github.io') ||
       window.location.hostname.endsWith('pages.dev') ||
       window.location.protocol === 'file:'
     );
-    if (isStaticHost) {
-      return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+    if (!isStaticHost) {
+      return `/api/proxy-image?url=${encodeURIComponent(url)}`;
     }
-    return `/api/proxy-image?url=${encodeURIComponent(url)}`;
+    // On static hosts like GitHub Pages, return original URL (components fall back to holographic blueprint on error)
+    return url;
   }
   return url;
 }

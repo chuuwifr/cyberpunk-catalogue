@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { playCyberClick } from '../utils/audio.ts';
 import { GitHubUser } from '../utils/githubService.ts';
+import { PlayerProfile } from '../types/playerProfile.ts';
 
 interface CyberHeaderProps {
   searchQuery: string;
@@ -34,6 +35,8 @@ interface CyberHeaderProps {
   onRuleSystemChange: (sys: 'both' | 'red' | 'iz') => void;
   githubUser: GitHubUser | null;
   onOpenGitHubModal: () => void;
+  activeProfile?: PlayerProfile;
+  onOpenProfileManager?: () => void;
 }
 
 export const CyberHeader: React.FC<CyberHeaderProps> = ({
@@ -55,6 +58,8 @@ export const CyberHeader: React.FC<CyberHeaderProps> = ({
   onRuleSystemChange,
   githubUser,
   onOpenGitHubModal,
+  activeProfile,
+  onOpenProfileManager,
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-[#0a0d14]/95 backdrop-blur-md border-b border-cyan-500/30 shadow-[0_4px_25px_rgba(0,240,255,0.08)]">
@@ -65,9 +70,30 @@ export const CyberHeader: React.FC<CyberHeaderProps> = ({
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             GLOBAL DATANET ONLINE // TAP V4.2
           </span>
-          <span className="text-zinc-600">|</span>
-          <span className="text-amber-400 hidden sm:inline">MALMART 2090 PROTOCOL</span>
+          {activeProfile && (
+            <>
+              <span className="text-zinc-600">|</span>
+              <button
+                onClick={() => {
+                  playCyberClick();
+                  onOpenProfileManager?.();
+                }}
+                className="inline-flex items-center gap-1.5 text-zinc-300 hover:text-cyan-300 transition-colors"
+                title="Gérer les profils de joueurs"
+              >
+                <span
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ backgroundColor: activeProfile.avatarColor || '#00f0ff' }}
+                />
+                <span className="text-zinc-500">OPÉRATEUR:</span>
+                <span className="font-bold text-cyan-300">{activeProfile.name}</span>
+                <span className="text-zinc-500 text-[10px]">({activeProfile.role})</span>
+              </button>
+            </>
+          )}
           <span className="text-zinc-600 hidden sm:inline">|</span>
+          <span className="text-amber-400 hidden sm:inline">MALMART 2090</span>
+          <span className="text-zinc-600 hidden md:inline">|</span>
           <span className="text-zinc-400 hidden md:inline">CORPO LINK: ARASAKA / MILITECH / BKI / AGA</span>
         </div>
 
