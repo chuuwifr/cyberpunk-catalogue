@@ -1,4 +1,4 @@
-import { EquipmentItem } from './gearLogic.ts';
+import { EquipmentItem, getItemPriceEb } from './gearLogic.ts';
 import { EQUIPMENT_DATABASE } from '../data/equipmentData.ts';
 import { PlayerProfile, InventoryItem, EquipmentSlot, ShopTransactionResult } from '../types/playerProfile.ts';
 
@@ -317,10 +317,9 @@ export function calculateProfileStats(profile: PlayerProfile): {
   profile.inventory.forEach((inv) => {
     const item = inv.item;
     const qty = inv.quantity || 1;
-    const priceEb = (item.red?.priceEb || 0) * qty;
-    const priceCredits = (item.iz?.priceCredits || 0) * qty;
+    const priceEb = getItemPriceEb(item) * qty;
     totalValueEb += priceEb;
-    totalValueCredits += priceCredits;
+    totalValueCredits += priceEb;
 
     // Items in stash do NOT count toward carry weight
     if (inv.slot !== 'stash') {
@@ -366,7 +365,7 @@ export function calculateProfileStats(profile: PlayerProfile): {
 }
 
 /**
- * Buy an item in the Virtual Shop
+ * Buy an item in the Virtual Shop using Eurodollars (€$)
  */
 export function buyItem(
   profileId: string,
@@ -380,20 +379,18 @@ export function buyItem(
     return { success: false, message: 'Profil introuvable.' };
   }
 
-  const cost = currency === 'eb' ? (item.red.priceEb || 0) * quantity : (item.iz.priceCredits || 0) * quantity;
-  const currentFunds = currency === 'eb' ? profile.walletEb : profile.walletCredits;
+  const cost = getItemPriceEb(item) * quantity;
+  const currentFunds = profile.walletEb;
 
   if (currentFunds < cost) {
-    const symbol = currency === 'eb' ? '€$' : 'c$';
     return {
       success: false,
-      message: `Fonds insuffisants ! Solde actuel : ${currentFunds.toLocaleString('fr-FR')} ${symbol}, Coût : ${cost.toLocaleString('fr-FR')} ${symbol}.`,
+      message: `Fonds insuffisants ! Solde actuel : ${currentFunds.toLocaleString('fr-FR')} €$, Coût : ${cost.toLocaleString('fr-FR')} €$.`,
     };
   }
 
-  // Deduct funds
-  const newWalletEb = currency === 'eb' ? profile.walletEb - cost : profile.walletEb;
-  const newWalletCredits = currency === 'credits' ? profile.walletCredits - cost : profile.walletCredits;
+  // Deduct funds from Eurodollars wallet
+  const newWalletEb = profile.walletEb - cost;
 
   // Check if item already exists in inventory (stackable)
   const existingIdx = profile.inventory.findIndex(
@@ -426,8 +423,8 @@ export function buyItem(
       quantity,
       equipped: false,
       slot,
-      purchasePriceEb: item.red.priceEb || 0,
-      purchasePriceCredits: item.iz.priceCredits || 0,
+      purchasePriceEb: getItemPriceEb(item),
+      purchasePriceCredits: getItemPriceEb(item),
       acquiredAt: new Date().toISOString(),
     };
 
@@ -436,7 +433,6 @@ export function buyItem(
 
   const updatedProfile = updateProfile(profileId, {
     walletEb: newWalletEb,
-    walletCredits: newWalletCredits,
     inventory: updatedInventory,
   });
 
@@ -448,13 +444,13 @@ export function buyItem(
 }
 
 /**
- * Sell an item back to the virtual shop
+ * Sell an item back to the virtual shop in Eurodollars (€$)
  */
 export function sellItem(
   profileId: string,
   inventoryItemId: string,
-  currency: 'eb' | 'credits' = 'eb',
-  resellRate = 0.6 // 60% standard resell rate in Night City / Malmart
+  _currency: 'eb' | 'credits' = 'eb',
+  resellRate = 0.6 // 60% standard resell rate
 ): ShopTransactionResult {
   const profiles = loadProfiles();
   const profile = profiles.find((p) => p.id === profileId);
@@ -467,7 +463,7 @@ export function sellItem(
     return { success: false, message: 'Objet introuvable dans l’inventaire.' };
   }
 
-  const basePrice = currency === 'eb' ? (invItem.item.red.priceEb || invItem.purchasePriceEb || 0) : (invItem.item.iz.priceCredits || invItem.purchasePriceCredits || 0);
+  const basePrice = getItemPriceEb(invItem.item) || invItem.purchasePriceEb || 0;
   const payout = Math.max(1, Math.round(basePrice * resellRate));
 
   let updatedInventory: InventoryItem[];
@@ -479,19 +475,16 @@ export function sellItem(
     updatedInventory = profile.inventory.filter((i) => i.id !== inventoryItemId);
   }
 
-  const newWalletEb = currency === 'eb' ? profile.walletEb + payout : profile.walletEb;
-  const newWalletCredits = currency === 'credits' ? profile.walletCredits + payout : profile.walletCredits;
+  const newWalletEb = profile.walletEb + payout;
 
   const updatedProfile = updateProfile(profileId, {
     walletEb: newWalletEb,
-    walletCredits: newWalletCredits,
     inventory: updatedInventory,
   });
 
-  const symbol = currency === 'eb' ? '€$' : 'c$';
   return {
     success: true,
-    message: `Vente effectuée : +${payout.toLocaleString('fr-FR')} ${symbol} crédités pour ${invItem.item.name} !`,
+    message: `Vente effectuée : +${payout.toLocaleString('fr-FR')} €$ crédités pour ${invItem.item.name} !`,
     updatedProfile: updatedProfile || undefined,
   };
 }
@@ -794,6 +787,7 @@ export function buildStarterInventory(equipmentIds: string[]): InventoryItem[] {
       slot = found.name.toLowerCase().includes('sandevistan') ? 'cyberware_neural' : 'cyberware_body';
     }
 
+    const price = getItemPriceEb(found);
     items.push({
       id: `inv-starter-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}-${idx}`,
       equipmentId: found.id,
@@ -801,8 +795,8 @@ export function buildStarterInventory(equipmentIds: string[]): InventoryItem[] {
       quantity: 1,
       equipped: true,
       slot,
-      purchasePriceEb: found.red?.priceEb || 0,
-      purchasePriceCredits: found.iz?.priceCredits || 0,
+      purchasePriceEb: price,
+      purchasePriceCredits: price,
       acquiredAt: new Date().toISOString(),
     });
   });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Layers, Shield, Zap, Cpu, Scale, Coins, AlertCircle } from 'lucide-react';
-import { EquipmentItem, formatCurrency, getSafeImageUrl } from '../utils/gearLogic.ts';
+import { EquipmentItem, formatCurrency, getItemPriceEb, getSafeImageUrl } from '../utils/gearLogic.ts';
 import { playCyberClick } from '../utils/audio.ts';
 
 interface CompareModalProps {

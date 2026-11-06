@@ -22,7 +22,7 @@ import {
   Coins,
   Check
 } from 'lucide-react';
-import { EquipmentItem, formatCurrency, getSafeImageUrl } from '../utils/gearLogic.ts';
+import { EquipmentItem, formatCurrency, getItemPriceEb, getSafeImageUrl } from '../utils/gearLogic.ts';
 import { generateHologramBlueprint } from '../utils/hologramSvg.ts';
 import { playCyberFavorite, playCyberClick } from '../utils/audio.ts';
 
@@ -41,7 +41,6 @@ interface EquipmentDetailModalProps {
   // Virtual Shop Props
   isShopMode?: boolean;
   playerWalletEb?: number;
-  playerWalletCredits?: number;
   ownedQuantity?: number;
   onBuyItem?: (item: EquipmentItem, currency: 'eb' | 'credits') => void;
 }
@@ -59,7 +58,6 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
   onDuplicateEquipment,
   isShopMode = false,
   playerWalletEb = 0,
-  playerWalletCredits = 0,
   ownedQuantity = 0,
   onBuyItem,
 }) => {
@@ -81,8 +79,8 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
 
   if (!item) return null;
 
-  const canAffordEb = playerWalletEb >= (item.red.priceEb || 0);
-  const canAffordCredits = playerWalletCredits >= (item.iz.priceCredits || 0);
+  const itemPriceEb = getItemPriceEb(item);
+  const canAffordEb = playerWalletEb >= itemPriceEb;
 
   const imageSource = !imgError && item.imageUrl
     ? getSafeImageUrl(item.imageUrl)
@@ -170,7 +168,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             <div className="space-y-3">
               <div className="bg-zinc-950 border border-zinc-800 p-3 rounded">
                 <div className="text-xs text-zinc-400 mb-1 flex items-center justify-between">
-                  <span>PRIX DU MARCHÉ</span>
+                  <span>VALEUR EN EURODOLLARS (€$)</span>
                   {ownedQuantity > 0 && (
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-500 text-emerald-300 font-bold flex items-center gap-1">
                       <Check className="w-3 h-3 text-emerald-400" />
@@ -179,15 +177,10 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
                   )}
                 </div>
                 <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-zinc-500 block">CYBERPUNK RED</span>
-                    <span className="text-base font-bold text-amber-400">{formatCurrency(item.red.priceEb, 'eb')}</span>
-                  </div>
-                  <div className="h-8 w-px bg-zinc-800" />
-                  <div className="text-right">
-                    <span className="text-[10px] text-zinc-500 block">MALMART 2090 (IZ)</span>
-                    <span className="text-base font-bold text-cyan-400">{formatCurrency(item.iz.priceCredits, 'credits')}</span>
-                  </div>
+                  <span className="text-lg font-bold text-amber-400">{formatCurrency(itemPriceEb)}</span>
+                  <span className="text-[10px] text-zinc-400 px-2 py-0.5 bg-zinc-900 rounded border border-zinc-800">
+                    {item.iz.quality}
+                  </span>
                 </div>
               </div>
 
@@ -197,36 +190,21 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
                   <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                     <ShoppingCart className="w-4 h-4 text-amber-400" /> ACQUÉRIR DANS LA BOUTIQUE
                   </span>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => {
-                        playCyberFavorite();
-                        onBuyItem(item, 'eb');
-                      }}
-                      disabled={!canAffordEb}
-                      className={`py-1.5 px-2 rounded text-xs font-bold transition-all border ${
-                        canAffordEb
-                          ? 'bg-amber-500 text-black border-amber-400 hover:bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
-                          : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
-                      }`}
-                    >
-                      Acheter ({formatCurrency(item.red.priceEb, 'eb')})
-                    </button>
-                    <button
-                      onClick={() => {
-                        playCyberFavorite();
-                        onBuyItem(item, 'credits');
-                      }}
-                      disabled={!canAffordCredits}
-                      className={`py-1.5 px-2 rounded text-xs font-bold transition-all border ${
-                        canAffordCredits
-                          ? 'bg-cyan-500 text-black border-cyan-400 hover:bg-cyan-400 shadow-[0_0_10px_rgba(0,240,255,0.3)]'
-                          : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
-                      }`}
-                    >
-                      Acheter ({formatCurrency(item.iz.priceCredits, 'credits')})
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => {
+                      playCyberFavorite();
+                      onBuyItem(item, 'eb');
+                    }}
+                    disabled={!canAffordEb}
+                    className={`w-full py-2 px-3 rounded text-xs font-bold transition-all border flex items-center justify-center gap-2 ${
+                      canAffordEb
+                        ? 'bg-amber-500 text-black border-amber-400 hover:bg-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.3)] cursor-pointer'
+                        : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                    }`}
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    <span>Acheter cet équipement ({formatCurrency(itemPriceEb)})</span>
+                  </button>
                 </div>
               )}
 
@@ -266,124 +244,63 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             </p>
           </div>
 
-          {/* Comparison Dual Rules Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* CP Red Details */}
-            <div className="bg-zinc-950 border border-red-900/50 rounded p-4 space-y-2">
-              <div className="flex items-center justify-between pb-2 border-b border-red-950/80">
-                <span className="text-xs font-bold text-red-400 tracking-wide">SYSTÈME CYBERPUNK RED</span>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800/60">
-                  {item.red.availability}
+          {/* SWADE / Interface Zéro 2.0 Technical Dossier */}
+          <div className="bg-zinc-950 border border-amber-900/60 rounded p-4 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-amber-950/80">
+              <span className="text-xs font-bold text-amber-400 tracking-wide flex items-center gap-1.5">
+                <Shield className="w-4 h-4 text-amber-400" />
+                SPÉCIFICATIONS SAVAGE WORLDS // INTERFACE ZÉRO 2.0
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800/60 font-bold">
+                QUALITÉ : {item.iz.quality}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs pt-1">
+              <div>
+                <span className="text-zinc-500 block text-[10px]">DÉGÂTS SWADE</span>
+                <span className="text-amber-300 font-bold text-sm">
+                  {item.iz.damage || 'Non létal / Utilitaire'}
                 </span>
               </div>
-
-              <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-                {item.red.damage && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">DÉGÂTS D10</span>
-                    <span className="text-zinc-100 font-bold">{item.red.damage}</span>
-                  </div>
-                )}
-                {item.red.rof !== undefined && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">CADENCE (ROF)</span>
-                    <span className="text-zinc-100 font-bold">{item.red.rof}</span>
-                  </div>
-                )}
-                {item.red.ammo && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">MUNITIONS</span>
-                    <span className="text-zinc-100">{item.red.ammo}</span>
-                  </div>
-                )}
-                {item.red.magazine && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">CHARGEUR</span>
-                    <span className="text-zinc-100">{item.red.magazine} cartouches</span>
-                  </div>
-                )}
-                {item.red.sp !== undefined && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">BLINDAGE (SP)</span>
-                    <span className="text-emerald-400 font-bold">{item.red.sp}</span>
-                  </div>
-                )}
-                {item.red.humanityLoss && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">PERTE HUMANITÉ</span>
-                    <span className="text-fuchsia-400 font-bold">{item.red.humanityLoss}</span>
-                  </div>
-                )}
-                {item.red.installReq && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">INSTALLATION</span>
-                    <span className="text-zinc-300">{item.red.installReq}</span>
-                  </div>
-                )}
-                <div>
-                  <span className="text-zinc-500 block text-[10px]">DISSIMULABLE</span>
-                  <span className={item.red.concealable ? 'text-emerald-400 font-bold' : 'text-zinc-400'}>
-                    {item.red.concealable ? 'Oui (Sous manteau)' : 'Non (Visible)'}
-                  </span>
-                </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px]">PÉNÉTRATION D'ARMURE</span>
+                <span className="text-orange-400 font-bold text-sm">
+                  {item.iz.ap !== undefined && item.iz.ap > 0 ? `PA ${item.iz.ap}` : 'PA 0'}
+                </span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px]">PORTÉE EN CASES (x2 m)</span>
+                <span className="text-zinc-100 font-bold text-sm">
+                  {item.iz.range || 'Contact / Équipement'}
+                </span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px]">POIDS DU MATÉRIEL</span>
+                <span className="text-zinc-100 font-bold text-sm">{item.iz.weightKg} kg</span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px]">CYBERTENSION (VIGUEUR)</span>
+                <span className="text-fuchsia-400 font-bold text-sm">
+                  {item.iz.cybertension !== undefined && item.iz.cybertension > 0 ? `${item.iz.cybertension} pts` : '0 pt'}
+                </span>
+              </div>
+              <div>
+                <span className="text-zinc-500 block text-[10px]">BLINDAGE / DÉFENSE</span>
+                <span className="text-emerald-400 font-bold text-sm">
+                  {item.iz.armorBonus !== undefined && item.iz.armorBonus > 0 ? `+${item.iz.armorBonus} Armure` : 'Aucun bonus'}
+                </span>
               </div>
             </div>
 
-            {/* Interface Zero Details */}
-            <div className="bg-zinc-950 border border-amber-900/50 rounded p-4 space-y-2">
-              <div className="flex items-center justify-between pb-2 border-b border-amber-950/80">
-                <span className="text-xs font-bold text-amber-400 tracking-wide">SAVAGE WORLDS // IZ 2.0</span>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800/60">
-                  {item.iz.quality}
+            {item.iz.notes && (
+              <div className="pt-2.5 mt-2 border-t border-zinc-800/80 text-[11px] text-zinc-300 bg-black/40 p-2.5 rounded border border-zinc-900">
+                <span className="text-amber-400 font-bold block text-[10px] mb-0.5">
+                  RÈGLES &amp; CAPACITÉS SWADE :
                 </span>
+                {item.iz.notes}
               </div>
-
-              <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-                {item.iz.damage && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">DÉGÂTS SWADE</span>
-                    <span className="text-amber-300 font-bold">{item.iz.damage}</span>
-                  </div>
-                )}
-                {item.iz.range && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">PORTÉE (CASES)</span>
-                    <span className="text-zinc-100">{item.iz.range}</span>
-                  </div>
-                )}
-                {item.iz.ap !== undefined && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">PÉNÉTRATION D'ARMURE</span>
-                    <span className="text-cyan-400 font-bold">PA {item.iz.ap}</span>
-                  </div>
-                )}
-                {item.iz.armorBonus !== undefined && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">BONUS D'ARMURE</span>
-                    <span className="text-emerald-400 font-bold">+{item.iz.armorBonus}</span>
-                  </div>
-                )}
-                {item.iz.cybertension !== undefined && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">CYBERTENSION</span>
-                    <span className="text-fuchsia-400 font-bold">{item.iz.cybertension} pts</span>
-                  </div>
-                )}
-                {item.iz.firewall !== undefined && (
-                  <div>
-                    <span className="text-zinc-500 block text-[10px]">FIREWALL</span>
-                    <span className="text-zinc-100">{item.iz.firewall}</span>
-                  </div>
-                )}
-              </div>
-
-              {item.iz.notes && (
-                <div className="pt-2 border-t border-zinc-800/80 text-[11px] text-zinc-300">
-                  <span className="text-zinc-500 font-bold block text-[10px]">RÈGLES SPÉCIALES :</span>
-                  {item.iz.notes}
-                </div>
-              )}
-            </div>
+            )}
           </div>
 
           {/* Tags */}

@@ -85,6 +85,13 @@ export interface LoadoutSummary {
 }
 
 /**
+ * Returns item price in Eurodollars (€$)
+ */
+export function getItemPriceEb(item: EquipmentItem): number {
+  return item.red?.priceEb || item.iz?.priceCredits || 0;
+}
+
+/**
  * Filter items based on active search criteria
  */
 export function filterEquipment(
@@ -120,8 +127,8 @@ export function filterEquipment(
       return false;
     }
 
-    // Price filter (Cyberpunk RED eb)
-    if (filters.maxPriceEb && filters.maxPriceEb > 0 && item.red.priceEb > filters.maxPriceEb) {
+    // Price filter (Eurodollars €$)
+    if (filters.maxPriceEb && filters.maxPriceEb > 0 && getItemPriceEb(item) > filters.maxPriceEb) {
       return false;
     }
 
@@ -237,7 +244,7 @@ export function validateEquipment(item: Partial<EquipmentItem>): { isValid: bool
     errors.push('Le prix en €$ ne peut pas être négatif.');
   }
   if (item.iz && item.iz.priceCredits < 0) {
-    errors.push('Le prix en c$ ne peut pas être négatif.');
+    errors.push('Le prix en €$ ne peut pas être négatif.');
   }
   return {
     isValid: errors.length === 0,
@@ -387,9 +394,9 @@ export function sortEquipment(
       case 'name-desc':
         return b.name.localeCompare(a.name, 'fr');
       case 'price-asc':
-        return a.red.priceEb - b.red.priceEb;
+        return getItemPriceEb(a) - getItemPriceEb(b);
       case 'price-desc':
-        return b.red.priceEb - a.red.priceEb;
+        return getItemPriceEb(b) - getItemPriceEb(a);
       case 'rarity-desc':
         return rarityRank[b.rarity] - rarityRank[a.rarity];
       case 'weight-desc':
@@ -406,13 +413,14 @@ export function sortEquipment(
 export function calculateLoadoutSummary(items: EquipmentItem[]): LoadoutSummary {
   return items.reduce(
     (acc, item) => {
+      const priceEb = getItemPriceEb(item);
       acc.totalItems += 1;
-      acc.totalPriceEb += item.red.priceEb;
-      acc.totalPriceCredits += item.iz.priceCredits;
+      acc.totalPriceEb += priceEb;
+      acc.totalPriceCredits += priceEb;
       acc.totalWeightKg += item.iz.weightKg;
       acc.totalCybertension += item.iz.cybertension ?? 0;
 
-      // Parse humanity loss if present like "2d6 (7)" or "1d6" or "2"
+      // Parse humanity loss if present
       if (item.red.humanityLoss) {
         const match = item.red.humanityLoss.match(/(\d+)d6/);
         if (match) {
@@ -489,11 +497,11 @@ export function rollCyberpunkRedD10(statPlusSkill: number, customSeed?: number[]
 }
 
 /**
- * Format currency with cyber styling
+ * Format currency with Eurodollars exclusively (€$)
  */
-export function formatCurrency(amount: number, type: 'eb' | 'credits'): string {
+export function formatCurrency(amount: number, _type?: 'eb' | 'credits'): string {
   const formatted = new Intl.NumberFormat('fr-FR').format(amount);
-  return type === 'eb' ? `${formatted} €$` : `${formatted} c$`;
+  return `${formatted} €$`;
 }
 
 /**

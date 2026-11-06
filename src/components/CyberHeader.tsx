@@ -31,8 +31,6 @@ interface CyberHeaderProps {
   onToggleSound: () => void;
   scanlinesEnabled: boolean;
   onToggleScanlines: () => void;
-  ruleSystem: 'both' | 'red' | 'iz';
-  onRuleSystemChange: (sys: 'both' | 'red' | 'iz') => void;
   githubUser: GitHubUser | null;
   onOpenGitHubModal: () => void;
   activeProfile?: PlayerProfile;
@@ -54,8 +52,6 @@ export const CyberHeader: React.FC<CyberHeaderProps> = ({
   onToggleSound,
   scanlinesEnabled,
   onToggleScanlines,
-  ruleSystem,
-  onRuleSystemChange,
   githubUser,
   onOpenGitHubModal,
   activeProfile,
@@ -98,45 +94,9 @@ export const CyberHeader: React.FC<CyberHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Rules System Quick Switch */}
-          <div className="flex items-center bg-zinc-900 border border-cyan-800/60 rounded px-1.5 py-0.5 text-[10px]">
-            <span className="text-zinc-400 mr-1.5 hidden lg:inline">Affichage Règles:</span>
-            <button
-              onClick={() => {
-                playCyberClick();
-                onRuleSystemChange('both');
-              }}
-              className={`px-1.5 py-0.5 rounded font-bold transition-colors ${
-                ruleSystem === 'both' ? 'bg-cyan-500 text-black' : 'text-zinc-400 hover:text-cyan-300'
-              }`}
-              title="Afficher Cyberpunk RED & Interface Zéro 2.0"
-            >
-              HYBRIDE
-            </button>
-            <button
-              onClick={() => {
-                playCyberClick();
-                onRuleSystemChange('red');
-              }}
-              className={`px-1.5 py-0.5 rounded font-bold transition-colors ${
-                ruleSystem === 'red' ? 'bg-red-600 text-white' : 'text-zinc-400 hover:text-red-400'
-              }`}
-              title="Focaliser sur Cyberpunk RED"
-            >
-              CP RED
-            </button>
-            <button
-              onClick={() => {
-                playCyberClick();
-                onRuleSystemChange('iz');
-              }}
-              className={`px-1.5 py-0.5 rounded font-bold transition-colors ${
-                ruleSystem === 'iz' ? 'bg-amber-500 text-black' : 'text-zinc-400 hover:text-amber-400'
-              }`}
-              title="Focaliser sur les règles SWADE / Interface Zéro 2.0"
-            >
-              SWADE / IZ
-            </button>
+          {/* Rules System Indicator */}
+          <div className="flex items-center bg-amber-950/60 border border-amber-500/50 rounded px-2 py-0.5 text-[10px] text-amber-300 font-bold font-mono shadow-[0_0_8px_rgba(245,158,11,0.2)]">
+            RÈGLES : SWADE // INTERFACE ZÉRO 2.0
           </div>
 
           {/* Sound toggle */}
@@ -174,19 +134,19 @@ export const CyberHeader: React.FC<CyberHeaderProps> = ({
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded bg-cyan-950/80 border border-cyan-400/60 flex items-center justify-center text-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.3)]">
             <Terminal className="w-5 h-5 animate-pulse" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-[#0a0d14]" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 rounded-full ring-2 ring-[#0a0d14]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg md:text-xl font-bold tracking-wider font-['Orbitron',sans-serif] bg-gradient-to-r from-cyan-400 via-teal-300 to-amber-400 bg-clip-text text-transparent">
                 TECH COMPENDIUM
               </h1>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 bg-red-950/80 border border-red-500/50 text-red-400 rounded">
-                RED &amp; IZ 2.0
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 bg-amber-950/80 border border-amber-500/50 text-amber-300 rounded font-bold">
+                SWADE // IZ 2.0
               </span>
             </div>
             <p className="text-xs text-zinc-400 font-mono hidden sm:block">
-              Catalogue de matériel, armement &amp; cybermatériel // Night City &amp; Malmart 2090
+              Catalogue de matériel &amp; armement // Interface Zéro 2.0 (Savage Worlds) &amp; Malmart 2090
             </p>
           </div>
         </div>

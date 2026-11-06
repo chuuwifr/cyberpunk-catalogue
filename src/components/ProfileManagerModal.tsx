@@ -63,7 +63,6 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
   const [handleInput, setHandleInput] = useState('');
   const [roleInput, setRoleInput] = useState('Solo / Mercenaire');
   const [walletEbInput, setWalletEbInput] = useState('8500');
-  const [walletCreditsInput, setWalletCreditsInput] = useState('16000');
   const [maxWeightInput, setMaxWeightInput] = useState('45');
   const [maxCyberInput, setMaxCyberInput] = useState('9');
   const [avatarColor, setAvatarColor] = useState('#ef4444');
@@ -91,7 +90,6 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
     setSelectedArchetypeId(preset.id);
     setRoleInput(preset.role);
     setWalletEbInput(String(preset.walletEb));
-    setWalletCreditsInput(String(preset.walletCredits));
     setMaxWeightInput(String(preset.maxWeightKg));
     setMaxCyberInput(String(preset.maxCybertension));
     setAvatarColor(preset.avatarColor);
@@ -127,7 +125,7 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
       handle: handleInput.trim() || `${nameInput.trim()} // Edgerunner`,
       role: roleInput,
       walletEb: parseInt(walletEbInput, 10) || 5000,
-      walletCredits: parseInt(walletCreditsInput, 10) || 10000,
+      walletCredits: parseInt(walletEbInput, 10) || 5000,
       maxWeightKg: parseInt(maxWeightInput, 10) || 40,
       maxCybertension: parseInt(maxCyberInput, 10) || 8,
       avatarColor,
@@ -148,7 +146,6 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
     setSelectedArchetypeId('solo');
     setRoleInput('Solo / Mercenaire');
     setWalletEbInput('8500');
-    setWalletCreditsInput('16000');
     setMaxWeightInput('45');
     setMaxCyberInput('9');
     setAvatarColor('#ef4444');
@@ -430,9 +427,9 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-bold">Eurodollars Début (€$)</label>
+                  <label className="block text-zinc-400 mb-1 font-bold">Fonds de Départ (€$ Eurodollars)</label>
                   <input
                     type="number"
                     min="0"
@@ -444,19 +441,7 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-bold">Crédits IZ Début (c$)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="100"
-                    value={walletCreditsInput}
-                    onChange={(e) => setWalletCreditsInput(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-700 rounded text-cyan-300 font-bold focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-zinc-400 mb-1 font-bold">Charge Max (kg)</label>
+                  <label className="block text-zinc-400 mb-1 font-bold">Charge Max Transportable (kg)</label>
                   <input
                     type="number"
                     min="10"
@@ -467,7 +452,7 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-zinc-400 mb-1 font-bold">Limite Cybertension</label>
+                  <label className="block text-zinc-400 mb-1 font-bold">Limite Cybertension (Vigueur)</label>
                   <input
                     type="number"
                     min="1"
@@ -621,12 +606,12 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
                     {/* Stats pills */}
                     <div className="grid grid-cols-2 gap-1.5 bg-zinc-900/80 p-2 rounded text-[11px] mb-2">
                       <div>
-                        <span className="text-zinc-500 text-[10px]">SOLDE €$ :</span>{' '}
+                        <span className="text-zinc-500 text-[10px]">SOLDE :</span>{' '}
                         <span className="text-amber-300 font-bold">{p.walletEb.toLocaleString('fr-FR')} €$</span>
                       </div>
                       <div>
-                        <span className="text-zinc-500 text-[10px]">SOLDE c$ :</span>{' '}
-                        <span className="text-cyan-300 font-bold">{p.walletCredits.toLocaleString('fr-FR')} c$</span>
+                        <span className="text-zinc-500 text-[10px]">VALEUR GEAR :</span>{' '}
+                        <span className="text-cyan-300 font-bold">{stats.totalValueEb.toLocaleString('fr-FR')} €$</span>
                       </div>
                       <div>
                         <span className="text-zinc-500 text-[10px]">CHARGE :</span>{' '}
@@ -644,7 +629,7 @@ export const ProfileManagerModal: React.FC<ProfileManagerModalProps> = ({
 
                     <div className="flex items-center justify-between text-[11px] text-zinc-400">
                       <span>Objets possédés : <strong className="text-cyan-300">{itemCount}</strong></span>
-                      <span>Armures SP : <strong className="text-emerald-400">{stats.equippedArmorSpTotal}</strong></span>
+                      <span>Armures actives : <strong className="text-emerald-400">+{stats.equippedArmorSpTotal}</strong></span>
                     </div>
                   </div>
 

@@ -153,20 +153,11 @@ export const ShopControlBar: React.FC<ShopControlBarProps> = ({
           {/* Wallet Balances */}
           <div className="flex items-center gap-2 bg-zinc-950/90 border border-zinc-800 rounded px-2.5 py-1">
             <Coins className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <div className="flex items-center gap-2.5">
-              <div>
-                <span className="text-[10px] text-zinc-500 block leading-none">EURODOLLARS</span>
-                <span className="text-xs font-bold text-amber-300">
-                  {activeProfile.walletEb.toLocaleString('fr-FR')} €$
-                </span>
-              </div>
-              <div className="h-5 w-px bg-zinc-800" />
-              <div>
-                <span className="text-[10px] text-zinc-500 block leading-none">CRÉDITS IZ</span>
-                <span className="text-xs font-bold text-cyan-300">
-                  {activeProfile.walletCredits.toLocaleString('fr-FR')} c$
-                </span>
-              </div>
+            <div>
+              <span className="text-[10px] text-zinc-500 block leading-none">SOLDE EURODOLLARS</span>
+              <span className="text-xs font-bold text-amber-300">
+                {activeProfile.walletEb.toLocaleString('fr-FR')} €$
+              </span>
             </div>
             <button
               onClick={() => {
@@ -174,7 +165,7 @@ export const ShopControlBar: React.FC<ShopControlBarProps> = ({
                 onQuickAddFunds();
               }}
               className="p-1 rounded text-zinc-400 hover:text-amber-300 hover:bg-amber-950/40 transition-colors ml-1"
-              title="Ajouter une prime ou récompense de mission"
+              title="Ajouter une prime ou récompense de mission (+2 000 €$)"
               aria-label="Ajouter des fonds"
             >
               <PlusCircle className="w-3.5 h-3.5" />

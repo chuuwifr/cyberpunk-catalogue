@@ -22,7 +22,7 @@ import {
   Check,
   Coins
 } from 'lucide-react';
-import { EquipmentItem, formatCurrency, getSafeImageUrl } from '../utils/gearLogic.ts';
+import { EquipmentItem, formatCurrency, getItemPriceEb, getSafeImageUrl } from '../utils/gearLogic.ts';
 import { generateHologramBlueprint } from '../utils/hologramSvg.ts';
 import { playCyberFavorite, playCyberClick } from '../utils/audio.ts';
 
@@ -33,14 +33,12 @@ interface EquipmentCardProps {
   isCompared: boolean;
   onToggleCompare: (item: EquipmentItem) => void;
   onSelectDetails: (item: EquipmentItem) => void;
-  ruleSystem: 'both' | 'red' | 'iz';
   onEditCustom?: (item: EquipmentItem) => void;
   onDeleteCustom?: (id: string) => void;
 
   // Virtual Shop Mode Props
   isShopMode?: boolean;
   playerWalletEb?: number;
-  playerWalletCredits?: number;
   ownedQuantity?: number;
   onBuyItem?: (item: EquipmentItem, currency: 'eb' | 'credits') => void;
 }
@@ -52,19 +50,16 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   isCompared,
   onToggleCompare,
   onSelectDetails,
-  ruleSystem,
   onEditCustom,
   onDeleteCustom,
   isShopMode = false,
   playerWalletEb = 0,
-  playerWalletCredits = 0,
   ownedQuantity = 0,
   onBuyItem,
 }) => {
   const [imgError, setImgError] = useState(false);
-
-  const canAffordEb = playerWalletEb >= (item.red.priceEb || 0);
-  const canAffordCredits = playerWalletCredits >= (item.iz.priceCredits || 0);
+  const itemPriceEb = getItemPriceEb(item);
+  const canAffordEb = playerWalletEb >= itemPriceEb;
 
   const getRarityStyles = (rarity: string) => {
     switch (rarity) {
@@ -222,9 +217,8 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
         </div>
 
         {/* Quick price tag */}
-        <div className="absolute bottom-2 right-2 bg-black/85 backdrop-blur-sm px-2 py-1 rounded border border-amber-500/40 text-right">
-          <div className="text-xs font-bold text-amber-300">{formatCurrency(item.red.priceEb, 'eb')}</div>
-          <div className="text-[10px] text-zinc-400">{formatCurrency(item.iz.priceCredits, 'credits')}</div>
+        <div className="absolute bottom-2 right-2 bg-black/85 backdrop-blur-sm px-2.5 py-1 rounded border border-amber-500/40 text-right">
+          <div className="text-xs font-bold text-amber-300">{formatCurrency(itemPriceEb)}</div>
         </div>
       </div>
 
@@ -234,79 +228,43 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
           {item.description}
         </p>
 
-        {/* Dual Stat Specs Blocks based on selected rule system */}
+        {/* SWADE // INTERFACE ZÉRO Stats Block */}
         <div className="space-y-2 mb-3">
-          {/* Cyberpunk RED Block */}
-          {(ruleSystem === 'both' || ruleSystem === 'red') && (
-            <div className="bg-zinc-950/90 border border-red-900/40 rounded p-2 text-[11px]">
-              <div className="flex items-center justify-between text-red-400 font-bold border-b border-red-950/60 pb-1 mb-1">
-                <span>RÈGLES CP RED</span>
-                <span className="text-[10px] text-zinc-400">{item.red.availability}</span>
+          <div className="bg-zinc-950/90 border border-amber-900/40 rounded p-2.5 text-[11px]">
+            <div className="flex items-center justify-between text-amber-400 font-bold border-b border-amber-950/60 pb-1 mb-1.5">
+              <span>SWADE // INTERFACE ZÉRO</span>
+              <span className="text-[10px] text-zinc-400 px-1.5 py-0.2 rounded bg-zinc-900 border border-zinc-800">{item.iz.quality}</span>
+            </div>
+            <div className="space-y-1 text-zinc-300">
+              <div className="flex items-center justify-between">
+                {item.iz.damage ? (
+                  <span><strong className="text-amber-300">Dégâts:</strong> {item.iz.damage}</span>
+                ) : (
+                  <span className="text-zinc-500">Non-létal / Utilitaire</span>
+                )}
+                {item.iz.range && (
+                  <span><strong className="text-zinc-400">Portée:</strong> {item.iz.range}</span>
+                )}
               </div>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-zinc-300">
-                {item.red.damage && (
-                  <div>
-                    <span className="text-zinc-500">Dégâts:</span> <span className="text-red-300 font-semibold">{item.red.damage}</span>
-                  </div>
+              <div className="flex items-center justify-between text-[10px]">
+                {item.iz.ap ? <span><strong className="text-orange-400">PA (Armure):</strong> PA {item.iz.ap}</span> : <span><strong className="text-zinc-500">Poids:</strong> {item.iz.weightKg} kg</span>}
+                {item.iz.cybertension !== undefined && item.iz.cybertension > 0 && (
+                  <span>
+                    <strong className="text-fuchsia-400">Cybertension:</strong>{' '}
+                    {item.iz.cybertension} pts
+                  </span>
                 )}
-                {item.red.rof !== undefined && (
-                  <div>
-                    <span className="text-zinc-500">Cadence (ROF):</span> <span className="text-zinc-200">{item.red.rof}</span>
-                  </div>
+                {item.iz.armorBonus !== undefined && item.iz.armorBonus > 0 && (
+                  <span className="text-emerald-400 font-bold">
+                    +{item.iz.armorBonus} Armure
+                  </span>
                 )}
-                {item.red.sp !== undefined && (
-                  <div>
-                    <span className="text-zinc-500">Blindage (SP):</span> <span className="text-emerald-300 font-semibold">{item.red.sp}</span>
-                  </div>
-                )}
-                {item.red.humanityLoss && (
-                  <div>
-                    <span className="text-zinc-500">Perte Hum. (PH):</span> <span className="text-fuchsia-300 font-semibold">{item.red.humanityLoss}</span>
-                  </div>
-                )}
-                <div>
-                  <span className="text-zinc-500">Dissimulation:</span> <span className={item.red.concealable ? 'text-emerald-400' : 'text-zinc-400'}>{item.red.concealable ? 'Oui' : 'Non'}</span>
-                </div>
-                {item.red.magazine && (
-                  <div>
-                    <span className="text-zinc-500">Chargeur:</span> <span className="text-zinc-200">{item.red.magazine} tirs</span>
-                  </div>
-                )}
+              </div>
+              <div className="text-[10px] text-zinc-400 line-clamp-1 italic pt-0.5 border-t border-zinc-900">
+                Notes: {item.iz.notes}
               </div>
             </div>
-          )}
-
-          {/* Interface Zero 2.0 / SWADE Block */}
-          {(ruleSystem === 'both' || ruleSystem === 'iz') && (
-            <div className="bg-zinc-950/90 border border-amber-900/40 rounded p-2 text-[11px]">
-              <div className="flex items-center justify-between text-amber-400 font-bold border-b border-amber-950/60 pb-1 mb-1">
-                <span>SWADE // INTERFACE ZÉRO</span>
-                <span className="text-[10px] text-zinc-400">{item.iz.quality}</span>
-              </div>
-              <div className="space-y-1 text-zinc-300">
-                <div className="flex items-center justify-between">
-                  {item.iz.damage && (
-                    <span><strong className="text-amber-300">Dégâts SWADE:</strong> {item.iz.damage}</span>
-                  )}
-                  {item.iz.range && (
-                    <span><strong className="text-zinc-400">Portée:</strong> {item.iz.range}</span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between text-[10px]">
-                  {item.iz.ap ? <span><strong className="text-zinc-400">PA (Armor Piercing):</strong> PA {item.iz.ap}</span> : null}
-                  {item.iz.cybertension !== undefined && (
-                    <span>
-                      <strong className="text-fuchsia-400">Cybertension:</strong>{' '}
-                      {item.iz.cybertension > 0 ? `${item.iz.cybertension} pts` : '0 pt'}
-                    </span>
-                  )}
-                </div>
-                <div className="text-[10px] text-zinc-400 line-clamp-1 italic">
-                  Notes: {item.iz.notes}
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* VIRTUAL SHOP BUY BAR (If Shop Mode is active) */}
@@ -314,43 +272,26 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
           <div className="mb-2.5 p-2 bg-gradient-to-r from-amber-950/40 via-zinc-950 to-cyan-950/40 border border-amber-500/50 rounded flex flex-col gap-1.5">
             <div className="flex items-center justify-between text-[10px] font-bold">
               <span className="text-amber-400 flex items-center gap-1">
-                <ShoppingCart className="w-3.5 h-3.5" /> BOUTIQUE NOIRE
+                <ShoppingCart className="w-3.5 h-3.5" /> BOUTIQUE VIRTUELLE
               </span>
-              <span className="text-zinc-400">Acheter avec :</span>
+              <span className="text-amber-300">{formatCurrency(itemPriceEb)}</span>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              <button
-                onClick={() => {
-                  playCyberFavorite();
-                  onBuyItem(item, 'eb');
-                }}
-                disabled={!canAffordEb}
-                className={`py-1 px-1.5 rounded text-[11px] font-bold transition-all flex items-center justify-center gap-1 border ${
-                  canAffordEb
-                    ? 'bg-amber-500 text-black border-amber-400 hover:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.25)]'
-                    : 'bg-zinc-900/60 border-zinc-800 text-zinc-600 cursor-not-allowed'
-                }`}
-                title={canAffordEb ? `Acheter pour ${item.red.priceEb} €$` : 'Fonds en Eurodollars insuffisants'}
-              >
-                <span>Acheter {formatCurrency(item.red.priceEb, 'eb')}</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  playCyberFavorite();
-                  onBuyItem(item, 'credits');
-                }}
-                disabled={!canAffordCredits}
-                className={`py-1 px-1.5 rounded text-[11px] font-bold transition-all flex items-center justify-center gap-1 border ${
-                  canAffordCredits
-                    ? 'bg-cyan-500 text-black border-cyan-400 hover:bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.25)]'
-                    : 'bg-zinc-900/60 border-zinc-800 text-zinc-600 cursor-not-allowed'
-                }`}
-                title={canAffordCredits ? `Acheter pour ${item.iz.priceCredits} c$` : 'Fonds en Crédits IZ insuffisants'}
-              >
-                <span>Acheter {formatCurrency(item.iz.priceCredits, 'credits')}</span>
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                playCyberFavorite();
+                onBuyItem(item, 'eb');
+              }}
+              disabled={!canAffordEb}
+              className={`w-full py-1.5 px-2 rounded text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 border ${
+                canAffordEb
+                  ? 'bg-amber-500 text-black border-amber-400 hover:bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.25)] cursor-pointer'
+                  : 'bg-zinc-900/60 border-zinc-800 text-zinc-600 cursor-not-allowed'
+              }`}
+              title={canAffordEb ? `Acheter pour ${formatCurrency(itemPriceEb)}` : 'Fonds en Eurodollars insuffisants'}
+            >
+              <ShoppingCart className="w-3.5 h-3.5" />
+              <span>Acheter ({formatCurrency(itemPriceEb)})</span>
+            </button>
           </div>
         )}
 

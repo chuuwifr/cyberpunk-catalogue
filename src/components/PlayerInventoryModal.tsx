@@ -29,7 +29,7 @@ import {
   sellItem,
   adjustWallet
 } from '../utils/profileService.ts';
-import { EquipmentItem, formatCurrency, getSafeImageUrl } from '../utils/gearLogic.ts';
+import { EquipmentItem, formatCurrency, getItemPriceEb, getSafeImageUrl } from '../utils/gearLogic.ts';
 import { generateHologramBlueprint } from '../utils/hologramSvg.ts';
 import { playCyberClick, playCyberSelect, playCyberFavorite } from '../utils/audio.ts';
 
@@ -55,7 +55,6 @@ export const PlayerInventoryModal: React.FC<PlayerInventoryModalProps> = ({
   const [sellingItemId, setSellingItemId] = useState<string | null>(null);
   const [isAddFundsOpen, setIsAddFundsOpen] = useState(false);
   const [fundEbInput, setFundEbInput] = useState('1000');
-  const [fundCreditsInput, setFundCreditsInput] = useState('2000');
   const [notification, setNotification] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -99,11 +98,10 @@ export const PlayerInventoryModal: React.FC<PlayerInventoryModalProps> = ({
     e.preventDefault();
     playCyberFavorite();
     const eb = parseInt(fundEbInput, 10) || 0;
-    const creds = parseInt(fundCreditsInput, 10) || 0;
-    const updated = adjustWallet(profile.id, eb, creds);
+    const updated = adjustWallet(profile.id, eb, 0);
     if (updated) {
       onUpdateProfile(updated);
-      showNotice(`Fonds crédités : +${eb.toLocaleString('fr-FR')} €$ et +${creds.toLocaleString('fr-FR')} c$`);
+      showNotice(`Fonds crédités : +${eb.toLocaleString('fr-FR')} €$`);
       setIsAddFundsOpen(false);
     }
   };
@@ -112,23 +110,23 @@ export const PlayerInventoryModal: React.FC<PlayerInventoryModalProps> = ({
     playCyberClick();
     const textContent = `
 =====================================================
-⚡ TECH COMPENDIUM // FICHE DE PERSONNAGE
+⚡ TECH COMPENDIUM // FICHE DE PERSONNAGE (SWADE)
 =====================================================
 NOM: ${profile.name}
 HANDLE: ${profile.handle}
-RÔLE / CLASSE: ${profile.role}
+RÔLE / ARCHÉTYPE: ${profile.role}
+SYSTÈME DE RÈGLES: Savage Worlds // Interface Zéro 2.0
 DATE: ${new Date().toLocaleDateString('fr-FR')}
 
 --- SOLDE & PORTEFEUILLE ---
 - Eurodollars (€$): ${profile.walletEb.toLocaleString('fr-FR')} €$
-- Crédits IZ (c$): ${profile.walletCredits.toLocaleString('fr-FR')} c$
-- Valeur totale de l'inventaire: ${stats.totalValueEb.toLocaleString('fr-FR')} €$ / ${stats.totalValueCredits.toLocaleString('fr-FR')} c$
+- Valeur totale du paquetage: ${stats.totalValueEb.toLocaleString('fr-FR')} €$
 
 --- ÉTAT TACTIQUE ---
 - Poids transporté: ${stats.totalCarriedWeightKg} / ${profile.maxWeightKg} kg ${stats.isOverweight ? '[ENCOMBREMENT DÉPASSÉ]' : '[OK]'}
 - Cybertension installée: ${stats.totalCybertension} / ${profile.maxCybertension} pts ${stats.isCyberOverloaded ? '[SURCHARGE CYBER]' : '[OK]'}
-- Blindage SP cumulé: SP ${stats.equippedArmorSpTotal}
-- Armes actives: ${stats.equippedWeaponsCount}
+- Armures actives: ${stats.equippedArmorSpTotal > 0 ? `+${stats.equippedArmorSpTotal} Armure` : 'Aucune'}
+- Armes prêtes: ${stats.equippedWeaponsCount}
 
 --- INVENTAIRE DU PAQUETAGE (${profile.inventory.length} objets) ---
 ${profile.inventory
@@ -136,9 +134,9 @@ ${profile.inventory
     (i, idx) =>
       `[${idx + 1}] ${i.item.name} (x${i.quantity})
      Statut: ${i.equipped ? 'ÉQUIPÉ' : i.slot === 'stash' ? 'À LA PLANQUE' : 'DANS LE SAC'}
-     Catégorie: ${i.item.categoryLabel} | Rareté: ${i.item.rarityLabel}
-     Prix: ${i.item.red.priceEb} €$ / ${i.item.iz.priceCredits} c$ | Poids: ${i.item.iz.weightKg} kg
-     ${i.item.red.damage ? `Dégâts RED: ${i.item.red.damage} | ` : ''}${i.item.iz.damage ? `Dégâts SWADE: ${i.item.iz.damage} PA ${i.item.iz.ap || 0}` : ''}
+     Catégorie: ${i.item.categoryLabel} | Qualité: ${i.item.iz.quality}
+     Prix: ${getItemPriceEb(i.item)} €$ | Poids: ${i.item.iz.weightKg} kg
+     ${i.item.iz.damage ? `Dégâts SWADE: ${i.item.iz.damage} PA ${i.item.iz.ap || 0} | ` : ''}${i.item.iz.range ? `Portée: ${i.item.iz.range} | ` : ''}Notes: ${i.item.iz.notes}
 `
   )
   .join('\n')}
@@ -227,12 +225,9 @@ ${profile.inventory
           {/* Wallet */}
           <div className="bg-zinc-900/90 border border-zinc-800 rounded p-2.5 flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-zinc-500 block uppercase font-bold">SOLDE DU PORTEFEUILLE</span>
-              <div className="text-sm font-bold text-amber-300 mt-0.5">
+              <span className="text-[10px] text-zinc-500 block uppercase font-bold">SOLDE EURODOLLARS</span>
+              <div className="text-base font-bold text-amber-300 mt-0.5">
                 {profile.walletEb.toLocaleString('fr-FR')} €$
-              </div>
-              <div className="text-[11px] font-semibold text-cyan-300">
-                {profile.walletCredits.toLocaleString('fr-FR')} c$
               </div>
             </div>
             <button
@@ -311,34 +306,22 @@ ${profile.inventory
               <Coins className="w-4 h-4 text-amber-400" /> Ajouter Récompense de Mission :
             </span>
             <div className="flex items-center gap-1.5">
-              <label htmlFor="fund-eb" className="text-zinc-400">€$ :</label>
+              <label htmlFor="fund-eb" className="text-zinc-400">Montant en Eurodollars (€$) :</label>
               <input
                 id="fund-eb"
                 type="number"
                 value={fundEbInput}
                 onChange={(e) => setFundEbInput(e.target.value)}
-                className="w-24 px-2 py-1 bg-zinc-900 border border-zinc-700 text-amber-300 font-bold rounded"
+                className="w-28 px-2 py-1 bg-zinc-900 border border-zinc-700 text-amber-300 font-bold rounded"
                 min="0"
                 step="50"
-              />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <label htmlFor="fund-credits" className="text-zinc-400">c$ :</label>
-              <input
-                id="fund-credits"
-                type="number"
-                value={fundCreditsInput}
-                onChange={(e) => setFundCreditsInput(e.target.value)}
-                className="w-24 px-2 py-1 bg-zinc-900 border border-zinc-700 text-cyan-300 font-bold rounded"
-                min="0"
-                step="100"
               />
             </div>
             <button
               type="submit"
               className="px-3 py-1 bg-amber-500 text-black font-bold rounded hover:bg-amber-400 transition-colors"
             >
-              Valider Crédits
+              Valider Versement
             </button>
             <button
               type="button"
@@ -496,19 +479,19 @@ ${profile.inventory
                       </h3>
 
                       <div className="text-[11px] text-zinc-400 flex items-center gap-2 mt-0.5 flex-wrap">
-                        <span className="text-cyan-400">{item.manufacturer}</span>
+                        <span className="text-cyan-400 font-semibold">{item.manufacturer}</span>
                         <span>•</span>
                         <span>{item.iz.weightKg} kg</span>
-                        {item.red.damage && (
-                          <>
-                            <span>•</span>
-                            <span className="text-red-400 font-semibold">{item.red.damage} (RED)</span>
-                          </>
-                        )}
                         {item.iz.damage && (
                           <>
                             <span>•</span>
                             <span className="text-amber-400 font-semibold">{item.iz.damage} PA {item.iz.ap || 0}</span>
+                          </>
+                        )}
+                        {item.iz.range && (
+                          <>
+                            <span>•</span>
+                            <span className="text-zinc-300">{item.iz.range}</span>
                           </>
                         )}
                         {item.iz.cybertension !== undefined && item.iz.cybertension > 0 && (
@@ -517,10 +500,10 @@ ${profile.inventory
                             <span className="text-fuchsia-400">{item.iz.cybertension} pts cyber</span>
                           </>
                         )}
-                        {item.red.sp !== undefined && item.red.sp > 0 && (
+                        {item.iz.armorBonus !== undefined && item.iz.armorBonus > 0 && (
                           <>
                             <span>•</span>
-                            <span className="text-emerald-400">SP {item.red.sp}</span>
+                            <span className="text-emerald-400">+{item.iz.armorBonus} Armure</span>
                           </>
                         )}
                       </div>
@@ -530,14 +513,14 @@ ${profile.inventory
                   {/* Right: Actions */}
                   <div className="flex items-center gap-1.5 flex-wrap justify-end shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-zinc-800">
                     {/* Roll Dice Button (if weapon) */}
-                    {(item.red.damage || item.iz.damage) && (
+                    {item.iz.damage && (
                       <button
                         onClick={() => {
                           playCyberClick();
                           onOpenDiceRoller(item);
                         }}
                         className="p-1.5 rounded bg-zinc-900 border border-zinc-700 text-amber-300 hover:bg-amber-950/60 hover:border-amber-400 transition-colors"
-                        title="Lancer les dés d'attaque et de dégâts pour cette arme"
+                        title="Lancer les dés de tir et de dégâts SWADE pour cette arme"
                         aria-label="Lancer les dés"
                       >
                         <Dices className="w-4 h-4" />
@@ -576,26 +559,18 @@ ${profile.inventory
                       <button
                         onClick={() => setSellingItemId(inv.id)}
                         className="px-2.5 py-1.5 rounded bg-zinc-900 border border-zinc-700 text-zinc-400 hover:text-amber-300 hover:border-amber-400 transition-colors text-xs font-bold"
-                        title="Revendre cet objet au marché noir"
+                        title="Revendre cet objet au marché noir (60% de sa valeur)"
                       >
                         Revendre
                       </button>
                     ) : (
                       <div className="flex items-center gap-1 bg-amber-950/60 border border-amber-500/70 p-1 rounded animate-in fade-in">
-                        <span className="text-[10px] text-amber-300 font-bold px-1">Revendre à :</span>
                         <button
                           onClick={() => handleSell(inv.id, 'eb')}
-                          className="px-2 py-0.5 bg-amber-500 text-black font-bold rounded text-[10px] hover:bg-amber-400"
+                          className="px-2 py-1 bg-amber-500 text-black font-bold rounded text-xs hover:bg-amber-400"
                           title="Revendre en Eurodollars"
                         >
-                          {Math.round(item.red.priceEb * 0.6).toLocaleString('fr-FR')} €$
-                        </button>
-                        <button
-                          onClick={() => handleSell(inv.id, 'credits')}
-                          className="px-2 py-0.5 bg-cyan-500 text-black font-bold rounded text-[10px] hover:bg-cyan-400"
-                          title="Revendre en Crédits IZ"
-                        >
-                          {Math.round(item.iz.priceCredits * 0.6).toLocaleString('fr-FR')} c$
+                          Revendre (+{Math.round(getItemPriceEb(item) * 0.6).toLocaleString('fr-FR')} €$)
                         </button>
                         <button
                           onClick={() => setSellingItemId(null)}
@@ -618,8 +593,6 @@ ${profile.inventory
           <div className="flex items-center gap-2 text-zinc-400">
             <span>Valeur estimée du paquetage :</span>
             <span className="text-amber-400 font-bold">{stats.totalValueEb.toLocaleString('fr-FR')} €$</span>
-            <span>/</span>
-            <span className="text-cyan-400 font-bold">{stats.totalValueCredits.toLocaleString('fr-FR')} c$</span>
           </div>
 
           <button
